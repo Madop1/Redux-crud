@@ -3,10 +3,13 @@ import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import EditIcon from "@material-ui/icons/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteUsers, FetchUsers } from "../redux/userAction";
 import { Button, ButtonGroup } from "@mui/material";
@@ -61,7 +64,7 @@ function Home() {
 
   return (
     <>
-      <h3>Home</h3>
+      <h3 >Home</h3>
       <div>
         <Button
           variant="contained"
@@ -73,7 +76,7 @@ function Home() {
       </div>
       <TableContainer component={Paper}>
         <Table
-          sx={{ minWidth: 900, marginTop: 25 }}
+          sx={{ minWidth: 900, marginTop: 10 }}
           aria-label="customized table"
         >
           <TableHead>
@@ -105,28 +108,22 @@ function Home() {
                       color="primary"
                       aria-label="contained primary button group"
                     >
-                      <Button
-                        variant="outlined"
+                      <IconButton
                         color="primary"
                         onClick={() => navigate(`/editUsers/${user.id}`)}
                       >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
+                        <EditIcon />
+                      </IconButton>
+
+                      <IconButton
+                        aria-label="delete"
+                        color="warning"
                         onClick={() => {
-                          // console.log(
-                          //   "=-=-=-=-=-data=-=-=-=-=-handleclick",
-                          //   user,
-                          //   users
-                          // );
                           handleDelete(user.id);
                         }}
                       >
-                        Delete
-                        {/* {console.log("userrrrr", user)} */}
-                      </Button>
+                        <DeleteIcon />
+                      </IconButton>
                     </ButtonGroup>
                   </StyledTableCell>
                 </StyledTableRow>
