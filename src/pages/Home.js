@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteUsers, FetchUsers } from "../redux/userAction";
 import { Button, ButtonGroup } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,23 +34,43 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 function Home() {
   let dispatch = useDispatch();
-  const users = useSelector((state) => state.data);
-  console.log(">>>>>>>>>>>", users.users);
+  const users = useSelector((state) => state.data.users);
+  let navigate = useNavigate();
+  const [state, setState] = useState([]);
+  console.log(users);
 
   const loadUsers = async () => {
     dispatch(FetchUsers());
   };
+
   useEffect(() => {
     loadUsers();
+    //setState(users)
   }, []);
 
-  const handleDelete = ({id}) => {
+  useEffect(() => {
+    console.log("=-=-=-=-=-=-data=-=-=-=-=-", users);
+    if (users) setState(users);
+  }, [users]);
+
+  const handleDelete = (id) => {
+    // console.log("=-=-=-=-=-data=-=-=-=-=-", id)
     dispatch(DeleteUsers(id));
   };
+  console.log(users, "USER USER------->", state);
 
   return (
     <>
-      Home
+      <h3>Home</h3>
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/addUser")}
+        >
+          Add user
+        </Button>
+      </div>
       <TableContainer component={Paper}>
         <Table
           sx={{ minWidth: 900, marginTop: 25 }}
@@ -59,39 +80,52 @@ function Home() {
             <TableRow>
               <StyledTableCell>Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
-              <StyledTableCell align="center">Address</StyledTableCell>
               <StyledTableCell align="center">Contact</StyledTableCell>
               <StyledTableCell align="center">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.users.length > 0 &&
-              users.users.map((user) => (
-                <StyledTableRow key={user.id}>
-                  {console.log("userrrrr", user)}
+            {state.length > 0 &&
+              state.map((user, index) => (
+                <StyledTableRow key={index}>
+                  {/* {console.log("userrrrr", user)} */}
                   <StyledTableCell component="th" scope="row">
                     {user.name}
                   </StyledTableCell>
                   <StyledTableCell align="center">{user.email}</StyledTableCell>
-                  <StyledTableCell align="center">
+                  {/* <StyledTableCell align="center">
                     {user.address.city}
+                  </StyledTableCell> */}
+                  <StyledTableCell align="center">
+                    {user.contact}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{user.phone}</StyledTableCell>
                   <StyledTableCell align="center">
                     <ButtonGroup
                       variant="contained"
                       color="primary"
                       aria-label="contained primary button group"
                     >
-                      <Button variant="outlined" color="primary">
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => navigate(`/editUsers/${user.id}`)}
+                      >
                         Edit
                       </Button>
                       <Button
                         variant="outlined"
                         color="secondary"
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => {
+                          // console.log(
+                          //   "=-=-=-=-=-data=-=-=-=-=-handleclick",
+                          //   user,
+                          //   users
+                          // );
+                          handleDelete(user.id);
+                        }}
                       >
                         Delete
+                        {/* {console.log("userrrrr", user)} */}
                       </Button>
                     </ButtonGroup>
                   </StyledTableCell>
